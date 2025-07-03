@@ -147,6 +147,11 @@
         });
         closeBtn.addEventListener("click", (e) => {
           e.stopPropagation();
+          const allTabs = Array.from(document.querySelectorAll(".tab:not(.plus-tab)"));
+  if (allTabs.length === 1) {
+    // Only one tab left, ignore close action
+    return;
+  }
           delete tabs[tabId];
           tabButton.remove();
           if (currentTab === tabId) {
@@ -171,7 +176,7 @@
         allTabs.forEach((tab) => {
           const closeBtn = tab.querySelector(".close-btn");
           if (allTabs.length === 1) {
-            closeBtn.style.visibility = "hidden";
+            
           } else {
             closeBtn.style.visibility = "visible";
           }
