@@ -1,109 +1,4 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Ace Editor - Tabs</title>
-    <style>
-      body,
-      html {
-        margin: 0;
-        height: 100%;
-        background-color: #1e1e1e;
-        font-family: 'Consolas', 'Courier New', monospace;
-        color: white;
-        overflow: hidden;
-      }
-
-      #tab-bar {
-        background-color: #1e1e1e;
-        display: flex;
-        border-bottom: 1px solid #333;
-        overflow-x: auto;
-        white-space: nowrap;
-        flex-shrink: 0;
-      }
-
-      .tab {
-        color: #ccc;
-        background-color: transparent;
-        padding: 5px 12px;
-        margin-right: 2px;
-        cursor: pointer;
-        border: none;
-        border-radius: 3px 3px 0 0;
-        user-select: none;
-      }
-
-      .tab.active {
-        color: white;
-        background-color: #2d2d2d;
-        font-weight: bold;
-        border-radius: 0px, 0px, 8px, 8px;
-        border-bottom: 2px solid rgb(109, 200, 256);
-      }
-
-      .tab.plus-tab {
-        color: #ccc;
-        font-weight: bold;
-        background-color: transparent;
-      }
-
-      .tab.plus-tab:hover {
-        background-color: #333;
-        color: white;
-      }
-
-      #editor-container {
-        flex-grow: 1;
-        height: 100%;
-      }
-
-      #editor {
-        height: 100%;
-        width: 100%;
-        font-size: 14px;
-      }
-
-      .ace_editor {
-        background-color: #1e1e1e !important;
-        color: #f8f8f2 !important;
-      }
-
-      .ace_gutter {
-        background: #1e1e1e !important;
-        color: #888 !important;
-      }
-
-      .ace_gutter-cell {
-        color: #888 !important;
-      }
-
-      #container {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-      }
-
-      .tab .close-btn {
-        margin-left: 12px;
-        /* ⬅️ Increase this value to move it further right */
-        cursor: pointer;
-        color: #ccc;
-        font-weight: bold;
-        user-select: none;
-      }
-    </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js"></script>
-  </head>
-  <body>
-    <div id="container">
-      <div id="tab-bar"></div>
-      <div id="editor-container">
-        <div id="editor">print("Hello, Lua!")</div>
-      </div>
-    </div>
-    <script>
-      const editor = ace.edit("editor");
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Ace Editor - Tabs</title><style>body,html{margin:0;height:100%;background-color:#1e1e1e;font-family:Consolas,'Courier New',monospace;color:#fff;overflow:hidden}#tab-bar{background-color:#1e1e1e;display:flex;border-bottom:1px solid #333;overflow-x:auto;white-space:nowrap;flex-shrink:0}.tab{color:#ccc;background-color:transparent;padding:5px 12px;margin-right:2px;cursor:pointer;border:none;border-radius:3px 3px 0 0;user-select:none}.tab.active{color:#fff;background-color:#2d2d2d;font-weight:700;border-radius:0,0,8px,8px;border-bottom:2px solid #6dc8ff}.tab.plus-tab{color:#ccc;font-weight:700;background-color:transparent}.tab.plus-tab:hover{background-color:#333;color:#fff}#editor-container{flex-grow:1;height:100%}#editor{height:100%;width:100%;font-size:14px}.ace_editor{background-color:#1b1c1a!important;color:#f8f8f2!important}.ace_gutter{background:#1b1c1a!important;color:#888!important}.ace_gutter-cell{color:#888!important}#container{display:flex;flex-direction:column;height:100%}.tab .close-btn{margin-left:12px;cursor:pointer;color:#ccc;font-weight:700;user-select:none}</style><script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js"></script></head><body><div id="container"><div id="tab-bar"></div><div id="editor-container"><div id="editor">print("Hello, Lua!")</div></div></div><script>const editor = ace.edit("editor");
       editor.setTheme("ace/theme/monokai");
       editor.session.setMode("ace/mode/lua");
       editor.setShowPrintMargin(false);
@@ -123,7 +18,7 @@
         tabButton.className = "tab active";
         tabButton.dataset.tabId = tabId;
         const tabText = document.createElement("span");
-        tabText.innerText = name; 
+        tabText.innerText = name;
         tabButton.appendChild(tabText);
         const closeBtn = document.createElement("span");
         closeBtn.className = "close-btn";
@@ -148,10 +43,10 @@
         closeBtn.addEventListener("click", (e) => {
           e.stopPropagation();
           const allTabs = Array.from(document.querySelectorAll(".tab:not(.plus-tab)"));
-  if (allTabs.length === 1) {
-    // Only one tab left, ignore close action
-    return;
-  }
+          if (allTabs.length === 1) {
+            // Only one tab left, ignore close action
+            return;
+          }
           delete tabs[tabId];
           tabButton.remove();
           if (currentTab === tabId) {
@@ -175,23 +70,19 @@
         const allTabs = Array.from(document.querySelectorAll("#tab-bar .tab")).filter((t) => t.innerText !== "+");
         allTabs.forEach((tab) => {
           const closeBtn = tab.querySelector(".close-btn");
-          if (allTabs.length === 1) {
-            
-          } else {
+          if (allTabs.length === 1) {} else {
             closeBtn.style.visibility = "visible";
           }
         });
       }
-     
+
       function renameTabsSequentially() {
         const allTabs = Array.from(document.querySelectorAll("#tab-bar .tab")).filter((t) => t.innerText !== "+");
         const newTabs = {};
         allTabs.forEach((tabButton) => {
           const oldTabId = tabButton.dataset.tabId;
-         
           const tabText = tabButton.querySelector("span:first-child");
           tabText.innerText = "Untitled Tab";
-         
           newTabs[oldTabId] = tabs[oldTabId];
         });
         Object.keys(tabs).forEach((key) => delete tabs[key]);
@@ -213,7 +104,4 @@
       plusTab.addEventListener("click", () => {
         createTab("Untitled Tab", 'print("Hello World")');
       });
-      document.getElementById("tab-bar").appendChild(plusTab);
-    </script>
-  </body>
-</html>
+      document.getElementById("tab-bar").appendChild(plusTab);</script></body></html>
