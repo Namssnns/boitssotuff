@@ -376,7 +376,15 @@
         panel2.style.height = height + "px";
       };
 
+      function clearScriptButtons() {
+    const panel = document.getElementById("sliding-panel");
+    const items = panel.querySelectorAll(".panel-item");
+
+    items.forEach(item => item.remove());
+    }
+
       function addScriptButton(name, content) {
+        clearScriptButtons();
         const panel = document.getElementById("sliding-panel");
         const item = document.createElement("div");
         item.className = "panel-item";
