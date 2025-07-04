@@ -124,17 +124,17 @@
       }
 
       function addScriptButton(name, content) {
-        clearScriptButtons();
-        const panel = document.getElementById("sliding-panel");
-        const item = document.createElement("div");
-        item.className = "panel-item";
-        item.textContent = name;
-        item.onclick = () => {
-          window.chrome.webview.postMessage({
-            type: "createTab",
-            name: name,
-            content: content,
-          });
-        };
-        panel.appendChild(item);
-      }</script></body></html>
+  const panel = document.getElementById("sliding-panel");
+  const item = document.createElement("div");
+  item.className = "panel-item";
+  item.textContent = name;
+  item.onclick = () => {
+    window.chrome.webview.postMessage({
+      type: "createTab",
+      name: name,
+      content: content,
+    });
+  };
+  panel.appendChild(item);
+}
+</script></body></html>
