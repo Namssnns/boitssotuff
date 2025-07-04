@@ -108,15 +108,11 @@
         document.getElementById("second-sliding-panel").classList.remove("open");
       }
 
-      function syncPanelHeight() {
-        const editorContainer = document.getElementById("container");
+      function resizePanel(width, height) {
         const panel1 = document.getElementById("sliding-panel");
         const panel2 = document.getElementById("second-sliding-panel");
-        const height = editorContainer.offsetHeight + "px";
-        panel1.style.height = height;
-        panel2.style.height = height;
-      }
-      
-      window.addEventListener("load", syncPanelHeight);
-    
-      window.addEventListener("resize", syncPanelHeight);</script></body></html>
+        panel1.style.width = width + "px";
+        panel1.style.height = height + "px";
+        panel2.style.width = width + "px";
+        panel2.style.height = height + "px";
+      };</script></body></html>
