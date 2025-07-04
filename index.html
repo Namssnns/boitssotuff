@@ -1,107 +1,109 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><title>Ace Editor - Tabs</title><style>body,html{margin:0;height:100%;background-color:#1e1e1e;font-family:Consolas,"Courier New",monospace;color:#fff;overflow:hidden}#tab-bar{background-color:#1e1e1e;display:flex;border-bottom:1px solid #333;overflow-x:auto;white-space:nowrap;flex-shrink:0}.tab{color:#ccc;background-color:transparent;padding:5px 12px;margin-right:2px;cursor:pointer;border:none;border-radius:3px 3px 0 0;user-select:none}.tab.active{color:#fff;background-color:#2d2d2d;font-weight:700;border-radius:0,0,8px,8px;border-bottom:2px solid #6dc8ff}.tab.plus-tab{color:#ccc;font-weight:700;background-color:transparent}.tab.plus-tab:hover{background-color:#333;color:#fff}#editor-container{flex-grow:1;height:100%}#editor{height:100%;width:100%;font-size:14px}.ace_editor{background-color:#1b1c1a!important;color:#f8f8f2!important}.ace_gutter{background:#1b1c1a!important;color:#888!important}.ace_gutter-cell{color:#888!important}.ace_scrollbar-h,.ace_scrollbar-v{display:none!important}#container{display:flex;flex-direction:column;height:100%}.tab .close-btn{margin-left:12px;cursor:pointer;color:#ccc;font-weight:700;user-select:none}</style><script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js"></script></head><body><div id="container"><div id="tab-bar"></div><div id="editor-container"><div id="editor">print("Hello, Lua!")</div></div></div><script>const editor = ace.edit("editor");
-      editor.setTheme("ace/theme/monokai");
-      editor.session.setMode("ace/mode/lua");
-      editor.setShowPrintMargin(false);
-      const tabs = {};
-      let currentTab = null;
-      let tabCounter = 1;
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Ace Editor - Tabs with Dual Panels</title><style>body,html{margin:0;height:100%;background-color:#1e1e1e;font-family:Consolas,"Courier New",monospace;color:#fff;overflow:hidden}#container{display:flex;flex-direction:column;height:100%}#tab-bar{background-color:#1e1e1e;display:flex;border-bottom:1px solid #333;overflow-x:auto;white-space:nowrap;flex-shrink:0}.tab{color:#ccc;background-color:transparent;padding:5px 12px;margin-right:2px;cursor:pointer;border:none;user-select:none}.tab.active{color:#fff;background-color:#2d2d2d;font-weight:700;border-radius:0;border-bottom:2px solid #6dc8ff}.tab.plus-tab{color:#ccc;font-weight:700;background-color:transparent}.tab.plus-tab:hover{background-color:#333;color:#fff}#editor-container{flex-grow:1;height:100%}#editor{height:100%;width:100%;font-size:14px}.ace_editor{background-color:#1b1c1a!important;color:#f8f8f2!important}.ace_gutter{background:#1b1c1a!important;color:#888!important}.ace_gutter-cell{color:#888!important}.ace_scrollbar-h,.ace_scrollbar-v{display:none!important}.tab .close-btn{margin-left:12px;cursor:pointer;color:#ccc;font-weight:700;user-select:none}button{position:fixed;left:50%;transform:translateX(-50%);z-index:1000;color:#fff;border:none;padding:12px 24px;border-radius:25px;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,.3);transition:all .3s ease;text-transform:uppercase;letter-spacing:1px}#test-button{top:20px;background:linear-gradient(45deg,#ff6b6b,#4ecdc4);display:none}#test-button:hover{transform:translateX(-50%) scale(1.05);box-shadow:0 6px 20px rgba(0,0,0,.4)}#test-button:active{transform:translateX(-50%) scale(.95)}#second-button{top:60px;background:linear-gradient(45deg,#ffb347,#fc3);display:none}#second-button:hover{transform:translateX(-50%) scale(1.05)}#second-button:active{transform:translateX(-50%) scale(.95)}.sliding-panel{position:fixed;top:0;right:-400px;width:400px;height:100vh;background:linear-gradient(135deg,#2d2d2d,#1e1e1e);border-left:2px solid #6dc8ff;z-index:999;transition:right .4s ease-in-out;box-shadow:-5px 0 20px rgba(0,0,0,.5);overflow-y:auto;padding:20px;box-sizing:border-box}.sliding-panel.open{right:0}.sliding-panel h2{color:#6dc8ff;margin-top:0;border-bottom:2px solid #6dc8ff;padding-bottom:10px}.sliding-panel p{color:#ccc;line-height:1.6;margin-bottom:15px}.panel-item{background:#333;padding:15px 40px 15px 40px;border-radius:8px;margin-bottom:15px;border-left:4px solid #6dc8ff;cursor:pointer;transition:all .3s ease;user-select:none;font-size:16px;font-weight:500;color:#fff;position:relative;display:flex;align-items:center}.panel-item:hover{background:#404040;transform:translateX(5px);box-shadow:0 3px 10px rgba(109,200,255,.3);border-left-color:#4ecdc4}.panel-item:active{transform:translateX(3px);background:#2a2a2a}.remove-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:#ff4757;color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;cursor:pointer;transition:all .3s ease;z-index:10}.remove-btn:hover{background:#ff3742;transform:translateY(-50%) scale(1.1);box-shadow:0 2px 8px rgba(255,71,87,.4)}.remove-btn:active{transform:translateY(-50%) scale(.9)}</style><script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js"></script></head><body><div id="container"><div id="tab-bar"></div><div id="editor-container"><div id="editor">print("Hello, Lua!")</div></div></div><button id="test-button">Test Panel</button><button id="second-button">Second Panel</button><div id="sliding-panel" class="sliding-panel"><h2>Scripts List</h2><p>Click any script to open it!</p><div class="panel-item" onclick='alert("Save File clicked!")'><span class="remove-btn" onclick="event.stopPropagation(),this.parentElement.remove()">×</span>Save File</div><div class="panel-item" onclick='alert("Load File clicked!")'><span class="remove-btn" onclick="event.stopPropagation(),this.parentElement.remove()">×</span>Load File</div><div class="panel-item" onclick='alert("Format Code clicked!")'><span class="remove-btn" onclick="event.stopPropagation(),this.parentElement.remove()">×</span>Format Code</div><div class="panel-item" onclick='alert("Find & Replace clicked!")'><span class="remove-btn" onclick="event.stopPropagation(),this.parentElement.remove()">×</span>Find & Replace</div><div class="panel-item" onclick='alert("Change Theme clicked!")'><span class="remove-btn" onclick="event.stopPropagation(),this.parentElement.remove()">×</span>Change Theme</div></div><div id="second-sliding-panel" class="sliding-panel"><h2>Settings</h2><p>This is the second panel content.</p><div class="panel-item" onclick='alert("General Settings Clicked")'>General Settings</div><div class="panel-item" onclick='alert("More Settings Clicked")'>More Settings</div></div><script>const editor = ace.edit("editor");
+            editor.setTheme("ace/theme/monokai");
+            editor.session.setMode("ace/mode/lua");
+            editor.setShowPrintMargin(false);
+            const tabs = {};
+            let currentTab = null;
+            let tabCounter = 1;
 
-      function createTab(name = "Untitled Tab", initialCode = "") {
-        if (currentTab) {
-          tabs[currentTab] = editor.getValue();
-        }
-        const tabId = "tab_" + tabCounter;
-        tabCounter++;
-        tabs[tabId] = initialCode;
-        currentTab = tabId;
-        const tabButton = document.createElement("div");
-        tabButton.className = "tab active";
-        tabButton.dataset.tabId = tabId;
-        const tabText = document.createElement("span");
-        tabText.innerText = name;
-        tabButton.appendChild(tabText);
-        const closeBtn = document.createElement("span");
-        closeBtn.className = "close-btn";
-        closeBtn.innerText = "×";
-        closeBtn.title = "Close tab";
-        tabButton.appendChild(closeBtn);
-        document.querySelectorAll(".tab").forEach((tab) => tab.classList.remove("active"));
-        const tabBar = document.getElementById("tab-bar");
-        tabBar.insertBefore(tabButton, document.querySelector(".tab.plus-tab"));
-        editor.setValue(initialCode, -1);
-        tabButton.classList.add("active");
-        updateCloseButtonsVisibility();
-        tabText.addEventListener("click", () => {
-          if (currentTab) {
-            tabs[currentTab] = editor.getValue();
-          }
-          currentTab = tabButton.dataset.tabId;
-          editor.setValue(tabs[currentTab], -1);
-          document.querySelectorAll(".tab").forEach((tab) => tab.classList.remove("active"));
-          tabButton.classList.add("active");
-        });
-        closeBtn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          const allTabs = Array.from(document.querySelectorAll(".tab:not(.plus-tab)"));
-          if (allTabs.length === 1) {
-            // Only one tab left, ignore close action
-            return;
-          }
-          delete tabs[tabId];
-          tabButton.remove();
-          if (currentTab === tabId) {
-            const allTabs = Array.from(document.querySelectorAll(".tab:not(.plus-tab)"));
-            if (allTabs.length > 0) {
-              const nextTab = allTabs[0];
-              currentTab = nextTab.dataset.tabId;
-              editor.setValue(tabs[currentTab] || "", -1);
-              document.querySelectorAll(".tab").forEach((tab) => tab.classList.remove("active"));
-              nextTab.classList.add("active");
-            } else {
-              createTab("Untitled Tab", 'print("Hello World")');
+            function createTab(name = "Untitled Tab", initialCode = "") {
+                if (currentTab) tabs[currentTab] = editor.getValue();
+                const tabId = "tab_" + tabCounter++;
+                tabs[tabId] = initialCode;
+                currentTab = tabId;
+                const tabButton = document.createElement("div");
+                tabButton.className = "tab active";
+                tabButton.dataset.tabId = tabId;
+                const tabText = document.createElement("span");
+                tabText.innerText = name;
+                tabButton.appendChild(tabText);
+                const closeBtn = document.createElement("span");
+                closeBtn.className = "close-btn";
+                closeBtn.innerText = "×";
+                closeBtn.title = "Close tab";
+                tabButton.appendChild(closeBtn);
+                document.querySelectorAll(".tab").forEach((tab) => tab.classList.remove("active"));
+                document.getElementById("tab-bar").insertBefore(tabButton, document.querySelector(".tab.plus-tab"));
+                editor.setValue(initialCode, -1);
+                tabButton.classList.add("active");
+                updateCloseButtonsVisibility();
+                tabText.addEventListener("click", () => {
+                    if (currentTab) tabs[currentTab] = editor.getValue();
+                    currentTab = tabButton.dataset.tabId;
+                    editor.setValue(tabs[currentTab], -1);
+                    document.querySelectorAll(".tab").forEach((tab) => tab.classList.remove("active"));
+                    tabButton.classList.add("active");
+                });
+                closeBtn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    const allTabs = Array.from(document.querySelectorAll(".tab:not(.plus-tab)"));
+                    if (allTabs.length === 1) return;
+                    delete tabs[tabId];
+                    tabButton.remove();
+                    if (currentTab === tabId) {
+                        const nextTab = allTabs[0];
+                        currentTab = nextTab.dataset.tabId;
+                        editor.setValue(tabs[currentTab] || "", -1);
+                        document.querySelectorAll(".tab").forEach((tab) => tab.classList.remove("active"));
+                        nextTab.classList.add("active");
+                    }
+                    updateCloseButtonsVisibility();
+                });
             }
-          }
-          updateCloseButtonsVisibility();
-          renameTabsSequentially();
-        });
-      }
 
-      function updateCloseButtonsVisibility() {
-        const allTabs = Array.from(document.querySelectorAll("#tab-bar .tab")).filter((t) => t.innerText !== "+");
-        allTabs.forEach((tab) => {
-          const closeBtn = tab.querySelector(".close-btn");
-          if (allTabs.length === 1) {} else {
-            closeBtn.style.visibility = "visible";
-          }
-        });
-      }
+            function updateCloseButtonsVisibility() {
+                const allTabs = Array.from(document.querySelectorAll("#tab-bar .tab")).filter((t) => t.innerText !== "+");
+                allTabs.forEach((tab) => {
+                    const closeBtn = tab.querySelector(".close-btn");
+                    closeBtn.style.visibility = allTabs.length > 1 ? "visible" : "hidden";
+                });
+            }
+            const plusTab = document.createElement("div");
+            plusTab.className = "tab plus-tab";
+            plusTab.innerText = "+";
+            plusTab.addEventListener("click", () => createTab("Untitled Tab", 'print("Hello World")'));
+            document.getElementById("tab-bar").appendChild(plusTab);
+            createTab("Untitled Tab", 'print("Hello World")');
+            // Panel logic
+            const testButton = document.getElementById("test-button");
+            const secondButton = document.getElementById("second-button");
+            const panel1 = document.getElementById("sliding-panel");
+            const panel2 = document.getElementById("second-sliding-panel");
+            let currentlyOpenPanel = null;
 
-      function renameTabsSequentially() {
-        const allTabs = Array.from(document.querySelectorAll("#tab-bar .tab")).filter((t) => t.innerText !== "+");
-        const newTabs = {};
-        allTabs.forEach((tabButton) => {
-          const oldTabId = tabButton.dataset.tabId;
-          const tabText = tabButton.querySelector("span:first-child");
-          tabText.innerText = "Untitled Tab";
-          newTabs[oldTabId] = tabs[oldTabId];
-        });
-        Object.keys(tabs).forEach((key) => delete tabs[key]);
-        Object.assign(tabs, newTabs);
-      }
+            function switchPanel(newPanel, button, label) {
+                if (currentlyOpenPanel && currentlyOpenPanel !== newPanel) {
+                    currentlyOpenPanel.classList.remove("open");
+                    setTimeout(() => {
+                        newPanel.classList.add("open");
+                        currentlyOpenPanel = newPanel;
+                    }, 400);
+                } else if (!currentlyOpenPanel) {
+                    newPanel.classList.add("open");
+                    currentlyOpenPanel = newPanel;
+                } else if (currentlyOpenPanel === newPanel) {
+                    newPanel.classList.remove("open");
+                    currentlyOpenPanel = null;
+                }
+                testButton.textContent = currentlyOpenPanel === panel1 ? "Close Panel" : "Test Panel";
+                secondButton.textContent = currentlyOpenPanel === panel2 ? "Close Panel" : "Second Panel";
+            }
+            testButton.addEventListener("click", () => switchPanel(panel1, testButton, "Test Panel"));
+            secondButton.addEventListener("click", () => switchPanel(panel2, secondButton, "Second Panel"));
 
-      function getNextTabName() {
-        return "Untitled Tab";
-      }
-      const container = document.getElementById("container");
-      container.addEventListener("scroll", () => editor.resize());
-      window.addEventListener("resize", () => editor.resize());
-      createTab("Untitled Tab", 'print("Hello World")');
-      const plusTab = document.createElement("div");
-      plusTab.className = "tab plus-tab";
-      plusTab.innerText = "+";
-      plusTab.style.fontWeight = "bold";
-      plusTab.style.userSelect = "none";
-      plusTab.addEventListener("click", () => {
-        createTab("Untitled Tab", 'print("Hello World")');
-      });
-      document.getElementById("tab-bar").appendChild(plusTab);</script></body></html>
+            function openPanel(name) {
+                const panel1 = document.getElementById("sliding-panel");
+                const panel2 = document.getElementById("second-sliding-panel");
+                panel1.classList.remove("open");
+                panel2.classList.remove("open");
+                if (name === "panel1") {
+                    panel1.classList.add("open");
+                } else if (name === "panel2") {
+                    panel2.classList.add("open");
+                }
+            }
+
+            function closePanels() {
+                document.getElementById("sliding-panel").classList.remove("open");
+                document.getElementById("second-sliding-panel").classList.remove("open");
+            }</script></body></html>
