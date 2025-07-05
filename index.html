@@ -99,18 +99,36 @@
         filenameInput.value = "";
         filenameInput.focus();
       });
-      saveYesButton.addEventListener("click", () => {
-        const filename = filenameInput.value.trim();
-        if (filename) {
-          const currentCode = editor.getValue();
-          if (window.chrome && window.chrome.webview) {
-            window.chrome.webview.postMessage({
-              type: "saveFile",
-              filename: filename,
-              content: currentCode,
-              path: "C:\\Users\\jacob\\source\\repos\\Autumn Rework\\bin\\x64\\Release\\Scripts",
-            });
-          }
+    saveYesButton.addEventListener("click", () => {
+  const filename = filenameInput.value.trim();
+  if (filename) {
+    const currentCode = editor.getValue();
+    if (window.chrome && window.chrome.webview) {
+      window.chrome.webview.postMessage({
+        type: "saveFile",
+        filename: filename,
+        content: currentCode,
+        path: "C:\\Users\\jacob\\source\\repos\\Autumn Rework\\bin\\x64\\Release\\Scripts",
+      });
+    }
+    savePopup.style.display = "none";
+
+
+    const tabButtons = document.querySelectorAll(".tab");
+    tabButtons.forEach((tab) => {
+      if (tab.dataset.tabId === currentTab) {
+        const span = tab.querySelector("span");
+        if (span) {
+          span.textContent = filename;
+        }
+      }
+    });
+
+  } else {
+    alert("Please enter a filename!");
+  }
+});
+              
           savePopup.style.display = "none";
         } else {
           alert("Please enter a filename!");
