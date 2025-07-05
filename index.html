@@ -55,7 +55,7 @@
                 const allTabs = Array.from(document.querySelectorAll("#tab-bar .tab")).filter((t) => t.innerText !== "+");
                 allTabs.forEach((tab) => {
                     const closeBtn = tab.querySelector(".close-btn");
-                    closeBtn.style.visibility = allTabs.length > 1 ? "visible" : "hidden";
+             
                 });
             }
             const plusTab = document.createElement("div");
