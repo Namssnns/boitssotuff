@@ -1,412 +1,418 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><title>Monaco Editor - Tabs with Dual Panels</title><style>body,html{margin:0;height:100%;background-color:#1b1c1a;font-family:Consolas,"Courier New",monospace;color:#fff;overflow:hidden}#container{display:flex;flex-direction:column;height:100%}#tab-bar{background-color:#1e1e1e;display:flex;border-bottom:1px solid #333;overflow-x:auto;white-space:nowrap;flex-shrink:0}.tab{color:#ccc;background-color:transparent;padding:5px 12px;margin-right:2px;cursor:pointer;border:none;user-select:none}::-webkit-scrollbar-track{background:0 0}::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-thumb{background:silver;border-radius:6px}.tab.active{color:#fff;background-color:#2d2d2d;font-weight:700;border-radius:0;border-bottom:2px solid #6dc8ff}.tab.plus-tab{color:#ccc;font-weight:700;background-color:transparent}.tab.plus-tab:hover{background-color:#333;color:#fff}#editor-container{flex-grow:1;height:100%;background-color:#1b1c1a}#editor{height:100%;width:100%;font-size:14px;background-color:#1b1c1a}.tab .close-btn{margin-left:12px;cursor:pointer;color:#ccc;font-weight:700;user-select:none}button{position:fixed;left:50%;transform:translateX(-50%);z-index:1000;color:#fff;border:none;padding:12px 24px;border-radius:25px;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,.3);transition:all .3s ease;text-transform:uppercase;letter-spacing:1px}#test-button{top:20px;background:linear-gradient(45deg,#ff6b6b,#4ecdc4);display:none}#test-button:hover{transform:translateX(-50%) scale(1.05);box-shadow:0 6px 20px rgba(0,0,0,.4)}#test-button:active{transform:translateX(-50%) scale(.95)}#second-button{top:60px;background:linear-gradient(45deg,#ffb347,#fc3);display:none}#second-button:hover{transform:translateX(-50%) scale(1.05)}#second-button:active{transform:translateX(-50%) scale(.95)}#save-button{top:100px;background:linear-gradient(45deg,#4ecdc4,#44a08d);display:none}#save-button:hover{transform:translateX(-50%) scale(1.05)}#save-button:active{transform:translateX(-50%) scale(.95)}.sliding-panel{position:fixed;top:0;right:-400px;width:400px;height:100vh;background:linear-gradient(135deg,#2d2d2d,#1e1e1e);border-left:2px solid #6dc8ff;z-index:999;transition:right .4s ease-in-out;box-shadow:-5px 0 20px rgba(0,0,0,.5);overflow-y:auto;padding:20px;box-sizing:border-box;display:flex;flex-direction:column}.sliding-panel.open{right:0}.sliding-panel h2{color:#6dc8ff;margin-top:0;border-bottom:2px solid #6dc8ff;padding-bottom:10px}.sliding-panel p{color:#ccc;line-height:1.6;margin-bottom:15px}.panel-item{margin-bottom:10px;padding:12px 16px;display:block;border:1px solid #333;border-radius:6px;background:#2d2d2d;color:#fff;cursor:pointer}.panel-item:hover{background:#404040;transform:translateX(5px);box-shadow:0 3px 10px rgba(109,200,255,.3);border-left-color:#4ecdc4}.panel-item:active{transform:translateX(3px);background:#2a2a2a}.remove-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:#ff4757;color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;cursor:pointer;transition:all .3s ease;z-index:10}.remove-btn:hover{background:#ff3742;transform:translateY(-50%) scale(1.1);box-shadow:0 2px 8px rgba(255,71,87,.4)}.remove-btn:active{transform:translateY(-50%) scale(.9)}.save-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:#2d2d2d;border:2px solid #6dc8ff;padding:20px;z-index:10000;border-radius:10px;width:30%;max-width:400px;min-width:300px;text-align:center;box-shadow:0 5px 20px rgba(0,0,0,.5);display:none;transition:transform .3s ease-in-out}.save-popup.animate{transform:translate(-50%,-50%) scale(1)}.save-popup h3{margin-top:0;font-size:20px;color:#6dc8ff}.save-popup p{font-size:14px;color:#ccc;margin:10px 0}.save-popup input{width:90%;padding:8px;margin:10px 0 20px 0;border-radius:5px;border:1px solid #444;background:#1b1c1a;color:#fff}.save-popup-buttons{display:flex;justify-content:space-between;gap:10px;margin-top:15px}button#save-yes{background:#4ecdc4!important;padding:10px 20px!important;border:none!important;color:#fff!important;border-radius:5px;font-weight:700;cursor:pointer;position:relative!important;transform:none!important;left:auto!important;top:auto!important;z-index:auto!important;font-size:14px!important;text-transform:none!important;letter-spacing:normal!important;box-shadow:none!important}button#save-no{background:#ff4757!important;padding:10px 20px!important;border:none!important;color:#fff!important;border-radius:5px;font-weight:700;cursor:pointer;position:static!important;transform:none!important;right:auto!important;top:auto!important;left:auto!important;z-index:auto!important;font-size:14px!important;text-transform:none!important;letter-spacing:normal!important;box-shadow:none!important}button#save-yes:hover{background:#3eb8b0!important;transform:none!important}button#save-no:hover{background:#ff3742!important;transform:none!important}.windows-prompt{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.3);display:none;align-items:center;justify-content:center;z-index:10001;font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif}.windows-prompt-dialog{background:#f0f0f0;border:1px solid #0078d4;border-radius:0;min-width:400px;max-width:500px;box-shadow:0 4px 20px rgba(0,0,0,.3);overflow:hidden}.windows-prompt-header{background:linear-gradient(to bottom,#fff,#f0f0f0);border-bottom:1px solid #d1d1d1;padding:8px 12px;color:#000;font-size:13px;font-weight:400}.windows-prompt-content{padding:16px;color:#000}.windows-prompt-message{margin:0 0 12px 0;font-size:13px;line-height:1.4}.windows-prompt-input{width:100%;padding:4px 6px;border:1px solid #acacac;font-size:13px;font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif;outline:0}.windows-prompt-input:focus{border-color:#0078d4;box-shadow:0 0 0 1px #0078d4}.windows-prompt-buttons{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}.windows-prompt-btn{padding:6px 20px;border:1px solid #acacac;background:linear-gradient(to bottom,#fff,#f0f0f0);color:#000;font-size:13px;font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif;cursor:pointer;min-width:75px;border-radius:0}.windows-prompt-btn:hover{background:linear-gradient(to bottom,#f0f0f0,#e0e0e0);border-color:#0078d4}.windows-prompt-btn.primary{background:linear-gradient(to bottom,#0078d4,#005a9e);border-color:#005a9e;color:#fff}.windows-prompt-btn.primary:hover{background:linear-gradient(to bottom,#106ebe,#005a9e)}.search-container{margin-bottom:15px;position:relative}.search-input{width:100%;padding:8px 12px;border:1px solid #444;border-radius:5px;background:#1b1c1a;color:#fff;font-size:14px;outline:0;box-sizing:border-box}.search-input:focus{border-color:#6dc8ff;box-shadow:0 0 0 1px #6dc8ff}.search-input::placeholder{color:#888}.no-scripts-message{text-align:center;color:#888;font-style:italic;margin-top:20px;padding:20px;border:1px dashed #444;border-radius:5px;background:rgba(45,45,45,.3);display:none}.no-scripts-message.show{display:block}.panel-item.hidden{display:none}</style></head><body><div id="windows-prompt" class="windows-prompt"><div class="windows-prompt-dialog"><div class="windows-prompt-header">localhost says</div><div class="windows-prompt-content"><div class="windows-prompt-message">Enter a name for this script.</div><input type="text" class="windows-prompt-input" id="windows-prompt-input"><div class="windows-prompt-buttons"><button class="windows-prompt-btn primary" id="windows-prompt-ok">OK</button><button class="windows-prompt-btn" id="windows-prompt-cancel">Cancel</button></div></div></div></div><div id="save-popup" class="save-popup"><h3>Save File</h3><p>Enter a filename for your script:</p><input id="filename-input" type="text" placeholder="Enter filename..."><div class="save-popup-buttons"><button id="save-yes">Yes</button><button id="save-no">No</button></div></div><div id="container"><div id="tab-bar"></div><div id="editor-container"><div id="editor"></div></div></div><button id="test-button">Test Panel</button><button id="second-button">Second Panel</button><button id="save-button">Save File</button><div id="sliding-panel" class="sliding-panel"><h2>Scripts List</h2><div class="search-container"><input type="text" class="search-input" id="script-search" placeholder="Search scripts..."></div><div id="no-scripts-message" class="no-scripts-message">No saved scripts</div></div><div id="second-sliding-panel" class="sliding-panel"><h2>Settings</h2><p>This is the second panel content.</p><div class="panel-item" onclick='alert("General Settings Clicked")'>General Settings</div><div class="panel-item" onclick='alert("More Settings Clicked")'>More Settings</div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/loader.js"></script><script>require.config({ paths: { vs: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs" } });
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Monaco Editor - Tabs with Dual Panels</title><script src="https://unpkg.com/lucide@latest"></script><style>body,html{margin:0;height:100%;background-color:#1b1c1a;font-family:Consolas,"Courier New",monospace;color:#fff;overflow:hidden}#container{display:flex;flex-direction:column;height:100%}#tab-bar{background-color:#1e1e1e;display:flex;border-bottom:1px solid #333;overflow-x:auto;white-space:nowrap;flex-shrink:0}.tab{color:#ccc;background-color:transparent;padding:5px 12px;margin-right:2px;cursor:pointer;border:none;user-select:none}::-webkit-scrollbar-track{background:0 0}::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-thumb{background:silver;border-radius:6px}.tab.active{color:#fff;background-color:#2d2d2d;font-weight:700;border-radius:0;border-bottom:2px solid #6dc8ff}.tab.plus-tab{color:#ccc;font-weight:700;background-color:transparent}.tab.plus-tab:hover{background-color:#333;color:#fff}#editor-container{flex-grow:1;height:100%;background-color:#1b1c1a}#editor{height:100%;width:100%;font-size:14px;background-color:#1b1c1a}.tab .close-btn{margin-left:12px;cursor:pointer;color:#ccc;font-weight:700;user-select:none}button{position:fixed;left:50%;transform:translateX(-50%);z-index:1000;color:#fff;border:none;padding:12px 24px;border-radius:25px;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,.3);transition:all .3s ease;text-transform:uppercase;letter-spacing:1px}#test-button{top:20px;background:linear-gradient(45deg,#ff6b6b,#4ecdc4);display:none}#test-button:hover{transform:translateX(-50%) scale(1.05);box-shadow:0 6px 20px rgba(0,0,0,.4)}#test-button:active{transform:translateX(-50%) scale(.95)}#second-button{top:60px;background:linear-gradient(45deg,#ffb347,#fc3);display:none}#second-button:hover{transform:translateX(-50%) scale(1.05)}#second-button:active{transform:translateX(-50%) scale(.95)}#save-button{top:100px;background:linear-gradient(45deg,#4ecdc4,#44a08d);display:none}#save-button:hover{transform:translateX(-50%) scale(1.05)}#save-button:active{transform:translateX(-50%) scale(.95)}.sliding-panel{position:fixed;top:0;right:-400px;width:400px;height:100vh;background:linear-gradient(135deg,#2d2d2d,#1e1e1e);z-index:999;transition:right .4s ease-in-out;overflow-y:auto;padding:20px;box-sizing:border-box;display:flex;flex-direction:column}.sliding-panel.open{right:0}.sliding-panel h2{color:#6dc8ff;margin-top:0;border-bottom:2px solid #6dc8ff;padding-bottom:10px}.sliding-panel p{color:#ccc;line-height:1.6;margin-bottom:15px}.panel-item{margin-bottom:10px;padding:12px 16px;display:block;border-radius:6px;background:#2d2d2d color: #fff;cursor:pointer;transition:background-color .2s ease,color .2s ease}.panel-item:hover{background-color:#3a3a3a}.remove-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:#ff4757;color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;cursor:pointer;transition:all .3s ease;z-index:10}.remove-btn:hover{background:#ff3742;transform:translateY(-50%) scale(1.1);box-shadow:0 2px 8px rgba(255,71,87,.4)}.remove-btn:active{transform:translateY(-50%) scale(.9)}.save-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:#2d2d2d;border:2px solid #6dc8ff;padding:20px;z-index:10000;border-radius:10px;width:30%;max-width:400px;min-width:300px;text-align:center;box-shadow:0 5px 20px rgba(0,0,0,.5);display:none;transition:transform .3s ease-in-out}.save-popup.animate{transform:translate(-50%,-50%) scale(1)}.save-popup h3{margin-top:0;font-size:20px;color:#6dc8ff}.save-popup p{font-size:14px;color:#ccc;margin:10px 0}.save-popup input{width:90%;padding:8px;margin:10px 0 20px 0;border-radius:5px;border:1px solid #444;background:#1b1c1a;color:#fff}.save-popup-buttons{display:flex;justify-content:space-between;gap:10px;margin-top:15px}button#save-yes{background:#4ecdc4!important;padding:10px 20px!important;border:none!important;color:#fff!important;border-radius:5px;font-weight:700;cursor:pointer;position:relative!important;transform:none!important;left:auto!important;top:auto!important;z-index:auto!important;font-size:14px!important;text-transform:none!important;letter-spacing:normal!important;box-shadow:none!important}button#save-no{background:#ff4757!important;padding:10px 20px!important;border:none!important;color:#fff!important;border-radius:5px;font-weight:700;cursor:pointer;position:static!important;transform:none!important;right:auto!important;top:auto!important;left:auto!important;z-index:auto!important;font-size:14px!important;text-transform:none!important;letter-spacing:normal!important;box-shadow:none!important}button#save-yes:hover{background:#3eb8b0!important;transform:none!important}button#save-no:hover{background:#ff3742!important;transform:none!important}.windows-prompt{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.3);display:none;align-items:center;justify-content:center;z-index:10001;font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif}.windows-prompt-dialog{background:#f0f0f0;border:1px solid #0078d4;border-radius:0;min-width:400px;max-width:500px;box-shadow:0 4px 20px rgba(0,0,0,.3);overflow:hidden}.windows-prompt-header{background:linear-gradient(to bottom,#fff,#f0f0f0);border-bottom:1px solid #d1d1d1;padding:8px 12px;color:#000;font-size:13px;font-weight:400}.windows-prompt-content{padding:16px;color:#000}.windows-prompt-message{margin:0 0 12px 0;font-size:13px;line-height:1.4}.windows-prompt-input{width:100%;padding:4px 6px;border:1px solid #acacac;font-size:13px;font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif;outline:0}.windows-prompt-input:focus{border-color:#0078d4;box-shadow:0 0 0 1px #0078d4}.windows-prompt-buttons{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}.windows-prompt-btn{padding:6px 20px;border:1px solid #acacac;background:linear-gradient(to bottom,#fff,#f0f0f0);color:#000;font-size:13px;font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif;cursor:pointer;min-width:75px;border-radius:0}.windows-prompt-btn:hover{background:linear-gradient(to bottom,#f0f0f0,#e0e0e0);border-color:#0078d4}.windows-prompt-btn.primary{background:linear-gradient(to bottom,#0078d4,#005a9e);border-color:#005a9e;color:#fff}.windows-prompt-btn.primary:hover{background:linear-gradient(to bottom,#106ebe,#005a9e)}.search-container{margin-bottom:15px;position:relative}.search-input{width:100%;padding:8px 12px;border:1px solid #444;border-radius:5px;background-color:#1b1c1a;color:#fff;font-size:14px;outline:0;box-sizing:border-box}.search-input::placeholder{color:#888}.no-scripts-message{text-align:center;color:#888;font-style:italic;margin-top:20px;padding:80px;border:1px dashed #444;border-radius:5px;background:rgba(45,45,45,.3);display:none}.no-scripts-message.show{display:block}.panel-item.hidden{display:none}</style></head><body><div id="windows-prompt" class="windows-prompt"><div class="windows-prompt-dialog"><div class="windows-prompt-header">localhost says</div><div class="windows-prompt-content"><div class="windows-prompt-message">Enter a name for this script.</div><input type="text" class="windows-prompt-input" id="windows-prompt-input"><div class="windows-prompt-buttons"><button class="windows-prompt-btn primary" id="windows-prompt-ok">OK</button><button class="windows-prompt-btn" id="windows-prompt-cancel">Cancel</button></div></div></div></div><div id="save-popup" class="save-popup"><h3>Save File</h3><p>Enter a filename for your script:</p><input id="filename-input" type="text" placeholder="Enter filename..."><div class="save-popup-buttons"><button id="save-yes">Yes</button><button id="save-no">No</button></div></div><div id="container"><div id="tab-bar"></div><div id="editor-container"><div id="editor"></div></div></div><button id="test-button">Test Panel</button><button id="second-button">Second Panel</button><button id="save-button">Save File</button><div id="sliding-panel" class="sliding-panel"><div class="search-container"><input type="text" class="search-input" id="script-search" placeholder="Search scripts..."></div><div id="no-scripts-message" class="no-scripts-message">No saved scripts</div></div><div id="second-sliding-panel" class="sliding-panel"><h2>Settings</h2><p>This is the second panel content.</p><div class="panel-item" onclick='alert("General Settings Clicked")'>General Settings</div><div class="panel-item" onclick='alert("More Settings Clicked")'>More Settings</div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/loader.js"></script><script>require.config({
+        paths: {
+          vs: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs"
+        }
+      });
+      let editor;
+      const tabs = {};
+      let currentTab = null;
+      let tabCounter = 1;
+      // Suppress ResizeObserver errors
+      window.addEventListener("error", function(e) {
+        if (e.message && e.message.includes("ResizeObserver loop")) {
+          e.stopImmediatePropagation();
+          e.preventDefault();
+          return false;
+        }
+      });
+      require(["vs/editor/editor.main"], function() {
+        editor = monaco.editor.create(document.getElementById("editor"), {
+          value: "",
+          language: "lua",
+          theme: "vs-dark",
+          minimap: {
+            enabled: true,
+            side: "right",
+          },
+          scrollbar: {
+            vertical: "hidden",
+            horizontal: "hidden",
+          },
+          overviewRulerBorder: false,
+          hideCursorInOverviewRuler: true,
+          scrollBeyondLastLine: false,
+          automaticLayout: false,
+          fontSize: 14,
+          fontFamily: 'Consolas, "Courier New", monospace',
+        });
+        // Manual resize handling to prevent ResizeObserver issues
+        let resizeTimeout;
+        const resizeObserver = new ResizeObserver(() => {
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(() => {
+            if (editor) {
+              editor.layout();
+            }
+          }, 100);
+        });
+        resizeObserver.observe(document.getElementById("editor"));
+        // Initialize first tab after editor is created
+        createTab("Untitled Tab", 'print("Hello World")');
+        // Initialize search functionality
+        initializeSearch();
+        // Show "No saved scripts" message initially
+        updateNoScriptsMessage();
+      });
 
-            let editor;
-            const tabs = {};
-            let currentTab = null;
-            let tabCounter = 1;
+      function createTab(name = "Untitled Tab", initialCode = "") {
+        if (currentTab && editor) tabs[currentTab] = editor.getValue();
+        const tabId = "tab_" + tabCounter++;
+        tabs[tabId] = initialCode;
+        currentTab = tabId;
+        const tabButton = document.createElement("div");
+        tabButton.className = "tab active";
+        tabButton.dataset.tabId = tabId;
+        const tabText = document.createElement("span");
+        tabText.innerText = name;
+        tabButton.appendChild(tabText);
+        const closeBtn = document.createElement("span");
+        closeBtn.className = "close-btn";
+        closeBtn.innerText = "×";
+        closeBtn.title = "Close tab";
+        tabButton.appendChild(closeBtn);
+        document.querySelectorAll(".tab").forEach((tab) => tab.classList.remove("active"));
+        document.getElementById("tab-bar").insertBefore(tabButton, document.querySelector(".tab.plus-tab"));
+        if (editor) editor.setValue(initialCode);
+        tabButton.classList.add("active");
+        updateCloseButtonsVisibility();
+        tabText.addEventListener("click", () => {
+          if (currentTab && editor) tabs[currentTab] = editor.getValue();
+          currentTab = tabButton.dataset.tabId;
+          if (editor) editor.setValue(tabs[currentTab]);
+          document.querySelectorAll(".tab").forEach((tab) => tab.classList.remove("active"));
+          tabButton.classList.add("active");
+        });
+        closeBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const allTabs = Array.from(document.querySelectorAll(".tab:not(.plus-tab)"));
+          if (allTabs.length === 1) return;
+          delete tabs[tabId];
+          tabButton.remove();
+          if (currentTab === tabId) {
+            const nextTab = allTabs[0];
+            currentTab = nextTab.dataset.tabId;
+            if (editor) editor.setValue(tabs[currentTab] || "");
+            document.querySelectorAll(".tab").forEach((tab) => tab.classList.remove("active"));
+            nextTab.classList.add("active");
+          }
+          updateCloseButtonsVisibility();
+        });
+      }
 
-            // Suppress ResizeObserver errors
-            window.addEventListener("error", function (e) {
-                if (e.message && e.message.includes("ResizeObserver loop")) {
-                    e.stopImmediatePropagation();
-                    e.preventDefault();
-                    return false;
-                }
+      function updateCloseButtonsVisibility() {
+        const allTabs = Array.from(document.querySelectorAll("#tab-bar .tab")).filter((t) => t.innerText !== "+");
+        allTabs.forEach((tab) => {
+          const closeBtn = tab.querySelector(".close-btn");
+        });
+      }
+      const plusTab = document.createElement("div");
+      plusTab.className = "tab plus-tab";
+      plusTab.innerText = "+";
+      plusTab.addEventListener("click", () => createTab("Untitled Tab", 'print("Hello World")'));
+      document.getElementById("tab-bar").appendChild(plusTab);
+      const testButton = document.getElementById("test-button");
+      const secondButton = document.getElementById("second-button");
+      const saveButton = document.getElementById("save-button");
+      const panel1 = document.getElementById("sliding-panel");
+      const panel2 = document.getElementById("second-sliding-panel");
+      let currentlyOpenPanel = null;
+
+      function switchPanel(newPanel, button, label) {
+        if (currentlyOpenPanel && currentlyOpenPanel !== newPanel) {
+          currentlyOpenPanel.classList.remove("open");
+          setTimeout(() => {
+            newPanel.classList.add("open");
+            currentlyOpenPanel = newPanel;
+          }, 400);
+        } else if (!currentlyOpenPanel) {
+          newPanel.classList.add("open");
+          currentlyOpenPanel = newPanel;
+        } else if (currentlyOpenPanel === newPanel) {
+          newPanel.classList.remove("open");
+          currentlyOpenPanel = null;
+        }
+        testButton.textContent = currentlyOpenPanel === panel1 ? "Close Panel" : "Test Panel";
+        secondButton.textContent = currentlyOpenPanel === panel2 ? "Close Panel" : "Second Panel";
+      }
+      testButton.addEventListener("click", () => switchPanel(panel1, testButton, "Test Panel"));
+      secondButton.addEventListener("click", () => switchPanel(panel2, secondButton, "Second Panel"));
+      const savePopup = document.getElementById("save-popup");
+      const filenameInput = document.getElementById("filename-input");
+      const saveYesButton = document.getElementById("save-yes");
+      const saveNoButton = document.getElementById("save-no");
+      saveButton.addEventListener("click", () => {
+        const filename = prompt("Enter a name for this script:");
+        if (filename && filename.trim()) {
+          const currentCode = editor ? editor.getValue() : "";
+          if (window.chrome && window.chrome.webview) {
+            window.chrome.webview.postMessage({
+              type: "saveFile",
+              filename: filename.trim(),
+              content: currentCode,
+              path: "C:\\Users\\jacob\\source\\repos\\Autumn Rework\\bin\\x64\\Release\\Scripts",
             });
-
-            require(["vs/editor/editor.main"], function () {
-                editor = monaco.editor.create(document.getElementById("editor"), {
-                    value: "",
-                    language: "lua",
-                    theme: "vs-dark",
-                    minimap: {
-                        enabled: true,
-                        side: "right",
-                    },
-                    scrollbar: {
-                        vertical: "hidden",
-                        horizontal: "hidden",
-                    },
-                    overviewRulerBorder: false,
-                    hideCursorInOverviewRuler: true,
-                    scrollBeyondLastLine: false,
-                    automaticLayout: false,
-                    fontSize: 14,
-                    fontFamily: 'Consolas, "Courier New", monospace',
-                });
-
-                // Manual resize handling to prevent ResizeObserver issues
-                let resizeTimeout;
-                const resizeObserver = new ResizeObserver(() => {
-                    clearTimeout(resizeTimeout);
-                    resizeTimeout = setTimeout(() => {
-                        if (editor) {
-                            editor.layout();
-                        }
-                    }, 100);
-                });
-
-                resizeObserver.observe(document.getElementById("editor"));
-
-                // Initialize first tab after editor is created
-                createTab("Untitled Tab", 'print("Hello World")');
-
-                // Initialize search functionality
-                initializeSearch();
-
-                // Show "No saved scripts" message initially
-                updateNoScriptsMessage();
+          }
+          // Update the tab name
+          const tabButtons = document.querySelectorAll(".tab");
+          tabButtons.forEach((tab) => {
+            if (tab.dataset.tabId === currentTab) {
+              const span = tab.querySelector("span");
+              if (span) {
+                span.textContent = filename.trim();
+              }
+            }
+          });
+        }
+      });
+      saveYesButton.addEventListener("click", () => {
+        const filename = filenameInput.value.trim();
+        if (filename) {
+          const currentCode = editor ? editor.getValue() : "";
+          if (window.chrome && window.chrome.webview) {
+            window.chrome.webview.postMessage({
+              type: "saveFile",
+              filename: filename,
+              content: currentCode,
+              path: "C:\\Users\\jacob\\source\\repos\\Autumn Rework\\bin\\x64\\Release\\Scripts",
             });
-
-            function createTab(name = "Untitled Tab", initialCode = "") {
-                if (currentTab && editor) tabs[currentTab] = editor.getValue();
-                const tabId = "tab_" + tabCounter++;
-                tabs[tabId] = initialCode;
-                currentTab = tabId;
-                const tabButton = document.createElement("div");
-                tabButton.className = "tab active";
-                tabButton.dataset.tabId = tabId;
-                const tabText = document.createElement("span");
-                tabText.innerText = name;
-                tabButton.appendChild(tabText);
-                const closeBtn = document.createElement("span");
-                closeBtn.className = "close-btn";
-                closeBtn.innerText = "×";
-                closeBtn.title = "Close tab";
-                tabButton.appendChild(closeBtn);
-                document.querySelectorAll(".tab").forEach((tab) => tab.classList.remove("active"));
-                document.getElementById("tab-bar").insertBefore(tabButton, document.querySelector(".tab.plus-tab"));
-                if (editor) editor.setValue(initialCode);
-                tabButton.classList.add("active");
-                updateCloseButtonsVisibility();
-                tabText.addEventListener("click", () => {
-                    if (currentTab && editor) tabs[currentTab] = editor.getValue();
-                    currentTab = tabButton.dataset.tabId;
-                    if (editor) editor.setValue(tabs[currentTab]);
-                    document.querySelectorAll(".tab").forEach((tab) => tab.classList.remove("active"));
-                    tabButton.classList.add("active");
-                });
-                closeBtn.addEventListener("click", (e) => {
-                    e.stopPropagation();
-                    const allTabs = Array.from(document.querySelectorAll(".tab:not(.plus-tab)"));
-                    if (allTabs.length === 1) return;
-                    delete tabs[tabId];
-                    tabButton.remove();
-                    if (currentTab === tabId) {
-                        const nextTab = allTabs[0];
-                        currentTab = nextTab.dataset.tabId;
-                        if (editor) editor.setValue(tabs[currentTab] || "");
-                        document.querySelectorAll(".tab").forEach((tab) => tab.classList.remove("active"));
-                        nextTab.classList.add("active");
-                    }
-                    updateCloseButtonsVisibility();
-                });
+          }
+          savePopup.classList.remove("animate");
+          savePopup.style.display = "none";
+          const tabButtons = document.querySelectorAll(".tab");
+          tabButtons.forEach((tab) => {
+            if (tab.dataset.tabId === currentTab) {
+              const span = tab.querySelector("span");
+              if (span) {
+                span.textContent = filename;
+              }
             }
+          });
+        } else {
+          alert("Please enter a filename!");
+        }
+      });
+      saveNoButton.addEventListener("click", () => {
+        savePopup.classList.remove("animate");
+        savePopup.style.display = "none";
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && savePopup.style.display === "block") {
+          savePopup.classList.remove("animate");
+          savePopup.style.display = "none";
+        }
+      });
+      filenameInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          saveYesButton.click();
+        }
+      });
 
-            function updateCloseButtonsVisibility() {
-                const allTabs = Array.from(document.querySelectorAll("#tab-bar .tab")).filter((t) => t.innerText !== "+");
-                allTabs.forEach((tab) => {
-                    const closeBtn = tab.querySelector(".close-btn");
-                });
-            }
+      function openPanel(name) {
+        addScriptButton("hi", "print(hello world)");
+        const panel1 = document.getElementById("sliding-panel");
+        const panel2 = document.getElementById("second-sliding-panel");
+        panel1.classList.remove("open");
+        panel2.classList.remove("open");
+        if (name === "panel1") {
+          panel1.classList.add("open");
+        } else if (name === "panel2") {
+          panel2.classList.add("open");
+        }
+      }
 
-            const plusTab = document.createElement("div");
-            plusTab.className = "tab plus-tab";
-            plusTab.innerText = "+";
-            plusTab.addEventListener("click", () => createTab("Untitled Tab", 'print("Hello World")'));
-            document.getElementById("tab-bar").appendChild(plusTab);
+      function closePanels() {
+        document.getElementById("sliding-panel").classList.remove("open");
+        document.getElementById("second-sliding-panel").classList.remove("open");
+      }
 
-            const testButton = document.getElementById("test-button");
-            const secondButton = document.getElementById("second-button");
-            const saveButton = document.getElementById("save-button");
-            const panel1 = document.getElementById("sliding-panel");
-            const panel2 = document.getElementById("second-sliding-panel");
-            let currentlyOpenPanel = null;
+      function resizePanel(width, height) {
+        const panel1 = document.getElementById("sliding-panel");
+        const panel2 = document.getElementById("second-sliding-panel");
+        panel1.style.width = width + "px";
+        panel1.style.height = height + "px";
+        panel2.style.width = width + "px";
+        panel2.style.height = height + "px";
+      }
 
-            function switchPanel(newPanel, button, label) {
-                if (currentlyOpenPanel && currentlyOpenPanel !== newPanel) {
-                    currentlyOpenPanel.classList.remove("open");
-                    setTimeout(() => {
-                        newPanel.classList.add("open");
-                        currentlyOpenPanel = newPanel;
-                    }, 400);
-                } else if (!currentlyOpenPanel) {
-                    newPanel.classList.add("open");
-                    currentlyOpenPanel = newPanel;
-                } else if (currentlyOpenPanel === newPanel) {
-                    newPanel.classList.remove("open");
-                    currentlyOpenPanel = null;
-                }
-                testButton.textContent = currentlyOpenPanel === panel1 ? "Close Panel" : "Test Panel";
-                secondButton.textContent = currentlyOpenPanel === panel2 ? "Close Panel" : "Second Panel";
-            }
+      function clearScriptButtons() {
+        const panel = document.getElementById("sliding-panel");
+        const items = panel.querySelectorAll(".panel-item");
+        items.forEach((item) => item.remove());
+        updateNoScriptsMessage();
+      }
 
-            testButton.addEventListener("click", () => switchPanel(panel1, testButton, "Test Panel"));
-            secondButton.addEventListener("click", () => switchPanel(panel2, secondButton, "Second Panel"));
-
-            const savePopup = document.getElementById("save-popup");
-            const filenameInput = document.getElementById("filename-input");
-            const saveYesButton = document.getElementById("save-yes");
-            const saveNoButton = document.getElementById("save-no");
-
-            saveButton.addEventListener("click", () => {
-                const filename = prompt("Enter a name for this script:");
-                if (filename && filename.trim()) {
-                    const currentCode = editor ? editor.getValue() : "";
-                    if (window.chrome && window.chrome.webview) {
-                        window.chrome.webview.postMessage({
-                            type: "saveFile",
-                            filename: filename.trim(),
-                            content: currentCode,
-                            path: "C:\\Users\\jacob\\source\\repos\\Autumn Rework\\bin\\x64\\Release\\Scripts",
-                        });
-                    }
-
-                    // Update the tab name
-                    const tabButtons = document.querySelectorAll(".tab");
-                    tabButtons.forEach((tab) => {
-                        if (tab.dataset.tabId === currentTab) {
-                            const span = tab.querySelector("span");
-                            if (span) {
-                                span.textContent = filename.trim();
-                            }
-                        }
-                    });
-                }
+      function addScriptButton(name, content) {
+        const panel = document.getElementById("sliding-panel");
+        const item = document.createElement("div");
+        item.className = "panel-item";
+        item.dataset.scriptName = name;
+        // Left: code icon
+        const icon = document.createElement("i");
+        icon.setAttribute("data-lucide", "code");
+        icon.style.marginRight = "10px";
+        // Middle: script name
+        const label = document.createElement("span");
+        label.textContent = name;
+        label.style.flex = "1";
+        // Right: delete button
+        const icon2 = document.createElement("i");
+        icon2.setAttribute("data-lucide", "trash-2");
+        icon2.style.marginRight = "-20px";
+        icon2.addEventListener("click", (e) => {
+          e.stopPropagation();
+          // Post to C# to delete the file
+          if (window.chrome && window.chrome.webview) {
+            window.chrome.webview.postMessage({
+              type: "deleteScript",
+              filename: name
             });
-
-            saveYesButton.addEventListener("click", () => {
-                const filename = filenameInput.value.trim();
-                if (filename) {
-                    const currentCode = editor ? editor.getValue() : "";
-                    if (window.chrome && window.chrome.webview) {
-                        window.chrome.webview.postMessage({
-                            type: "saveFile",
-                            filename: filename,
-                            content: currentCode,
-                            path: "C:\\Users\\jacob\\source\\repos\\Autumn Rework\\bin\\x64\\Release\\Scripts",
-                        });
-                    }
-                    savePopup.classList.remove("animate");
-                    savePopup.style.display = "none";
-
-                    const tabButtons = document.querySelectorAll(".tab");
-                    tabButtons.forEach((tab) => {
-                        if (tab.dataset.tabId === currentTab) {
-                            const span = tab.querySelector("span");
-                            if (span) {
-                                span.textContent = filename;
-                            }
-                        }
-                    });
-                } else {
-                    alert("Please enter a filename!");
-                }
+          }
+          // Remove from DOM
+          item.remove();
+          updateNoScriptsMessage();
+        });
+        item.style.display = "flex";
+        item.style.alignItems = "center";
+        item.style.justifyContent = "space-between";
+        item.style.position = "relative";
+        item.style.paddingRight = "35px"; // ensure there's room for the X
+        item.onclick = () => {
+          window.chrome.webview.postMessage({
+            type: "createTab",
+            name: name,
+            content: content
+          });
+        };
+        item.appendChild(icon);
+        item.appendChild(label);
+        item.appendChild(icon2);
+        panel.appendChild(item);
+        updateNoScriptsMessage();
+        // Activate Lucide icons
+        lucide.createIcons();
+      }
+      // Initialize search functionality
+      function initializeSearch() {
+        const searchInput = document.getElementById("script-search");
+        searchInput.addEventListener("input", (e) => {
+          const searchTerm = e.target.value.toLowerCase();
+          const scriptItems = document.querySelectorAll("#sliding-panel .panel-item");
+          let visibleCount = 0;
+          scriptItems.forEach((item) => {
+            const scriptName = item.textContent.toLowerCase();
+            if (scriptName.includes(searchTerm)) {
+              item.classList.remove("hidden");
+              visibleCount++;
+            } else {
+              item.classList.add("hidden");
+            }
+          });
+          // Update the no scripts message based on visible results
+          const noScriptsMessage = document.getElementById("no-scripts-message");
+          if (visibleCount === 0) {
+            if (searchTerm) {
+              noScriptsMessage.textContent = "No scripts match your search";
+            } else {
+              noScriptsMessage.textContent = "No saved scripts";
+            }
+            noScriptsMessage.classList.add("show");
+          } else {
+            noScriptsMessage.classList.remove("show");
+          }
+        });
+      }
+      // Update the no scripts message
+      function updateNoScriptsMessage() {
+        const scriptItems = document.querySelectorAll("#sliding-panel .panel-item");
+        const noScriptsMessage = document.getElementById("no-scripts-message");
+        if (scriptItems.length === 0) {
+          noScriptsMessage.textContent = "No saved scripts";
+          noScriptsMessage.classList.add("show");
+        } else {
+          noScriptsMessage.classList.remove("show");
+        }
+      }
+      // Function to trigger the Windows-style prompt - for C# to call
+      async function showSavePopupWithAnimation() {
+        const filename = await windowsPrompt("Enter a name for this script:");
+        if (filename && filename.trim()) {
+          const currentCode = editor ? editor.getValue() : "";
+          if (window.chrome && window.chrome.webview) {
+            window.chrome.webview.postMessage({
+              type: "saveFile",
+              filename: filename.trim(),
+              content: currentCode,
+              path: "C:\\Users\\jacob\\source\\repos\\Autumn Rework\\bin\\x64\\Release\\Scripts",
             });
-
-            saveNoButton.addEventListener("click", () => {
-                savePopup.classList.remove("animate");
-                savePopup.style.display = "none";
+          }
+          // Update the tab name
+          const tabButtons = document.querySelectorAll(".tab");
+          tabButtons.forEach((tab) => {
+            if (tab.dataset.tabId === currentTab) {
+              const span = tab.querySelector("span");
+              if (span) {
+                span.textContent = filename.trim();
+              }
+            }
+          });
+        }
+      }
+      // Function to trigger the built-in browser prompt - for C# to call
+      function showSavePrompt() {
+        const filename = prompt("Enter a name for this script:");
+        if (filename && filename.trim()) {
+          const currentCode = editor ? editor.getValue() : "";
+          if (window.chrome && window.chrome.webview) {
+            window.chrome.webview.postMessage({
+              type: "saveFile",
+              filename: filename.trim(),
+              content: currentCode,
+              path: "C:\\Users\\jacob\\source\\repos\\Autumn Rework\\bin\\x64\\Release\\Scripts",
             });
-
-            document.addEventListener("keydown", (e) => {
-                if (e.key === "Escape" && savePopup.style.display === "block") {
-                    savePopup.classList.remove("animate");
-                    savePopup.style.display = "none";
-                }
-            });
-
-            filenameInput.addEventListener("keydown", (e) => {
-                if (e.key === "Enter") {
-                    saveYesButton.click();
-                }
-            });
-
-            function openPanel(name) {
-                const panel1 = document.getElementById("sliding-panel");
-                const panel2 = document.getElementById("second-sliding-panel");
-                panel1.classList.remove("open");
-                panel2.classList.remove("open");
-                if (name === "panel1") {
-                    panel1.classList.add("open");
-                } else if (name === "panel2") {
-                    panel2.classList.add("open");
-                }
+          }
+          // Update the tab name
+          const tabButtons = document.querySelectorAll(".tab");
+          tabButtons.forEach((tab) => {
+            if (tab.dataset.tabId === currentTab) {
+              const span = tab.querySelector("span");
+              if (span) {
+                span.textContent = filename.trim();
+              }
             }
-
-            function closePanels() {
-                document.getElementById("sliding-panel").classList.remove("open");
-                document.getElementById("second-sliding-panel").classList.remove("open");
+          });
+        }
+      }
+      // Windows-style prompt function
+      function windowsPrompt(message, defaultValue = "") {
+        return new Promise((resolve) => {
+          const prompt = document.getElementById("windows-prompt");
+          const input = document.getElementById("windows-prompt-input");
+          const messageEl = document.querySelector(".windows-prompt-message");
+          const okBtn = document.getElementById("windows-prompt-ok");
+          const cancelBtn = document.getElementById("windows-prompt-cancel");
+          messageEl.textContent = message;
+          input.value = defaultValue;
+          prompt.style.display = "flex";
+          input.focus();
+          input.select();
+          const handleOK = () => {
+            const value = input.value;
+            prompt.style.display = "none";
+            resolve(value);
+          };
+          const handleCancel = () => {
+            prompt.style.display = "none";
+            resolve(null);
+          };
+          // Remove previous listeners
+          okBtn.onclick = handleOK;
+          cancelBtn.onclick = handleCancel;
+          input.onkeydown = (e) => {
+            if (e.key === "Enter") {
+              handleOK();
+            } else if (e.key === "Escape") {
+              handleCancel();
             }
-
-            function resizePanel(width, height) {
-                const panel1 = document.getElementById("sliding-panel");
-                const panel2 = document.getElementById("second-sliding-panel");
-                panel1.style.width = width + "px";
-                panel1.style.height = height + "px";
-                panel2.style.width = width + "px";
-                panel2.style.height = height + "px";
-            }
-
-            function clearScriptButtons() {
-                const panel = document.getElementById("sliding-panel");
-                const items = panel.querySelectorAll(".panel-item");
-                items.forEach((item) => item.remove());
-                updateNoScriptsMessage();
-            }
-
-            function addScriptButton(name, content) {
-                const panel = document.getElementById("sliding-panel");
-                const item = document.createElement("div");
-                item.className = "panel-item";
-                item.textContent = name;
-                item.onclick = () => {
-                    window.chrome.webview.postMessage({
-                        type: "createTab",
-                        name: name,
-                        content: content,
-                    });
-                };
-                panel.appendChild(item);
-                updateNoScriptsMessage();
-            }
-
-            // Initialize search functionality
-            function initializeSearch() {
-                const searchInput = document.getElementById("script-search");
-                searchInput.addEventListener("input", (e) => {
-                    const searchTerm = e.target.value.toLowerCase();
-                    const scriptItems = document.querySelectorAll("#sliding-panel .panel-item");
-                    let visibleCount = 0;
-
-                    scriptItems.forEach((item) => {
-                        const scriptName = item.textContent.toLowerCase();
-                        if (scriptName.includes(searchTerm)) {
-                            item.classList.remove("hidden");
-                            visibleCount++;
-                        } else {
-                            item.classList.add("hidden");
-                        }
-                    });
-
-                    // Update the no scripts message based on visible results
-                    const noScriptsMessage = document.getElementById("no-scripts-message");
-                    if (visibleCount === 0) {
-                        if (searchTerm) {
-                            noScriptsMessage.textContent = "No scripts match your search";
-                        } else {
-                            noScriptsMessage.textContent = "No saved scripts";
-                        }
-                        noScriptsMessage.classList.add("show");
-                    } else {
-                        noScriptsMessage.classList.remove("show");
-                    }
-                });
-            }
-
-            // Update the no scripts message
-            function updateNoScriptsMessage() {
-                const scriptItems = document.querySelectorAll("#sliding-panel .panel-item");
-                const noScriptsMessage = document.getElementById("no-scripts-message");
-
-                if (scriptItems.length === 0) {
-                    noScriptsMessage.textContent = "No saved scripts";
-                    noScriptsMessage.classList.add("show");
-                } else {
-                    noScriptsMessage.classList.remove("show");
-                }
-            }
-
-            // Function to trigger the Windows-style prompt - for C# to call
-            async function showSavePopupWithAnimation() {
-                const filename = await windowsPrompt("Enter a name for this script:");
-                if (filename && filename.trim()) {
-                    const currentCode = editor ? editor.getValue() : "";
-                    if (window.chrome && window.chrome.webview) {
-                        window.chrome.webview.postMessage({
-                            type: "saveFile",
-                            filename: filename.trim(),
-                            content: currentCode,
-                            path: "C:\\Users\\jacob\\source\\repos\\Autumn Rework\\bin\\x64\\Release\\Scripts",
-                        });
-                    }
-
-                    // Update the tab name
-                    const tabButtons = document.querySelectorAll(".tab");
-                    tabButtons.forEach((tab) => {
-                        if (tab.dataset.tabId === currentTab) {
-                            const span = tab.querySelector("span");
-                            if (span) {
-                                span.textContent = filename.trim();
-                            }
-                        }
-                    });
-                }
-            }
-
-            // Function to trigger the built-in browser prompt - for C# to call
-            function showSavePrompt() {
-                const filename = prompt("Enter a name for this script:");
-                if (filename && filename.trim()) {
-                    const currentCode = editor ? editor.getValue() : "";
-                    if (window.chrome && window.chrome.webview) {
-                        window.chrome.webview.postMessage({
-                            type: "saveFile",
-                            filename: filename.trim(),
-                            content: currentCode,
-                            path: "C:\\Users\\jacob\\source\\repos\\Autumn Rework\\bin\\x64\\Release\\Scripts",
-                        });
-                    }
-
-                    // Update the tab name
-                    const tabButtons = document.querySelectorAll(".tab");
-                    tabButtons.forEach((tab) => {
-                        if (tab.dataset.tabId === currentTab) {
-                            const span = tab.querySelector("span");
-                            if (span) {
-                                span.textContent = filename.trim();
-                            }
-                        }
-                    });
-                }
-            }
-
-            // Windows-style prompt function
-            function windowsPrompt(message, defaultValue = "") {
-                return new Promise((resolve) => {
-                    const prompt = document.getElementById("windows-prompt");
-                    const input = document.getElementById("windows-prompt-input");
-                    const messageEl = document.querySelector(".windows-prompt-message");
-                    const okBtn = document.getElementById("windows-prompt-ok");
-                    const cancelBtn = document.getElementById("windows-prompt-cancel");
-
-                    messageEl.textContent = message;
-                    input.value = defaultValue;
-                    prompt.style.display = "flex";
-                    input.focus();
-                    input.select();
-
-                    const handleOK = () => {
-                        const value = input.value;
-                        prompt.style.display = "none";
-                        resolve(value);
-                    };
-
-                    const handleCancel = () => {
-                        prompt.style.display = "none";
-                        resolve(null);
-                    };
-
-                    // Remove previous listeners
-                    okBtn.onclick = handleOK;
-                    cancelBtn.onclick = handleCancel;
-
-                    input.onkeydown = (e) => {
-                        if (e.key === "Enter") {
-                            handleOK();
-                        } else if (e.key === "Escape") {
-                            handleCancel();
-                        }
-                    };
-                });
-            }</script></body></html>
+          };
+        });
+      }</script></body></html>
